@@ -9,6 +9,7 @@ Description:
 
 # library imports
 from PIL import Image
+from tqdm import tqdm
 
 # module imports
 from utils import *
@@ -55,3 +56,8 @@ def generate_patches(data, label, patch_size = 512, patch_stride = 64, path = ".
     
     # return the patch count
     return patch_count
+
+if __name__ == '__main__':
+    data = np.array(Image.open("image.tif").convert("RGB"))
+    label = np.array(Image.open("labels.tif"))
+    generate_patches(data, label)
