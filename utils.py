@@ -17,6 +17,7 @@ from PIL import Image
 
 # Global variables
 MANUAL_SEED = 42
+np.random.seed(42)
 
 def read_directory_content(path):
     '''
