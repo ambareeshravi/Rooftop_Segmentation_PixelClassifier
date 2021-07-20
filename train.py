@@ -94,7 +94,7 @@ class PixelClassifier_Trainer:
         Exception:
             -
         '''
-        return nn.BCEWithLogitsLoss(reduction = self.loss_params["bce_reduction"])
+        return nn.BCELoss(reduction = self.loss_params["bce_reduction"])
     
     def step(self, inputs, labels):
         '''

@@ -30,6 +30,8 @@ def generate_patches(data, label, patch_size = 512, patch_stride = 64, path = ".
     
     Exception:
         number of patches as <int>
+        
+    # Add resizing images of multiple scales and saving
     '''
     
     # Setup paths
@@ -48,8 +50,8 @@ def generate_patches(data, label, patch_size = 512, patch_stride = 64, path = ".
             data_patch = data[xp:(xp + patch_size), yp:(yp + patch_size)]
             label_patch = label[xp:(xp + patch_size), yp:(yp + patch_size)]
             
-            # Check if there is at least one roof from the binary mask and for the output shape
-            if np.sum(label_patch) > 0 and (data_patch.shape == (patch_size, patch_size, data.shape[-1])):
+            # Check for the output shape
+            if (data_patch.shape == (patch_size, patch_size, data.shape[-1])): # and np.sum(label_patch) > 0:
                 file_name = "%05d.png"%(patch_count)
                 # Save the files to the desired locations
                 save_image(data_patch, os.path.join(data_path, file_name))
