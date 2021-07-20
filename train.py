@@ -22,7 +22,8 @@ class PixelClassifier_Trainer:
         val_loader = None,
         optimizer = "adam",
         loss_params = {
-         "bce_reduction": "mean"
+         "loss_type": "bce",
+         "reduction": "mean"
         },
         useGPU = True,
         showStatus = False
@@ -46,11 +47,12 @@ class PixelClassifier_Trainer:
         self.device = torch.device("cpu")
         if useGPU and torch.cuda.is_available():
             self.device = torch.device("cuda")
+            INFO("Running training on GPU")
         self.model.to(self.device)
         
         self.showStatus = showStatus
         
-        if self.showStatus: print("Model ready")
+        if self.showStatus: INFO("Model ready")
         
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -78,7 +80,7 @@ class PixelClassifier_Trainer:
         '''
         if "sgd" in self.optimizer.lower():
             return torch.optim.SGD(self.model.parameters(), lr = lr, momentum=0.9)
-        else:
+        else: # default is Adam
             return torch.optim.Adam(self.model.parameters(), lr = lr)
     
     def get_loss(self,):
@@ -95,9 +97,14 @@ class PixelClassifier_Trainer:
             -
             
         Possible loss functions apart from BCE:
-            1) MSE 2) Focal Loss 3) SSIM 4) DICE loss
+            1) MSE 2) SSIM? 3) Focal Loss? 4) DICE loss?
         '''
-        return nn.BCELoss(reduction = self.loss_params["bce_reduction"])
+        loss_type = self.loss_params["loss_type"].lower()
+        
+        if "bce" in loss_type:
+            return nn.BCELoss(reduction = self.loss_params["reduction"])
+        elif "mse" in loss_type:
+            return nn.MSELoss(reduction = self.loss_params["reduction"])
     
     def step(self, inputs, labels):
         '''
@@ -186,9 +193,9 @@ class PixelClassifier_Trainer:
         self.loss_criterion = self.get_loss()
         self.optimizer = self.get_optimizer(lr)
         
-        if self.showStatus: print("Loss and Optimizer ready")
+        if self.showStatus: INFO("Loss and Optimizer ready")
         
-        if self.showStatus: print("Starting the training")
+        if self.showStatus: INFO("Starting the training")
             
         for epoch in range(1, epochs + 1):
             epoch_st = time()
@@ -212,6 +219,8 @@ class PixelClassifier_Trainer:
             
             if epoch > 1 or epoch%status_frequency == 0:
                 self.display_epoch_stat(epoch, epoch_train_loss, epoch_val_loss, (epoch_et-epoch_st))
+                if epoch == 1:
+                    INFO("Expected time of completion of train: %0.2f hours"%((epoch_et-epoch_st)*self.epochs//3600))
         
         torch.save(self.model, self.model_path)
         return self.history

@@ -19,6 +19,23 @@ from PIL import Image
 MANUAL_SEED = 42
 np.random.seed(42)
 
+def INFO(s):
+    '''
+    Prints information in a particular format
+
+    Args:
+        s - string <str> to be printed
+
+    Returns:
+        -
+
+    Exception:
+        -
+    '''
+    print("-"*40)
+    print("INFO:", s)
+    print("-"*40)
+
 def read_directory_content(path):
     '''
     Reads all files in a directory given a path
@@ -50,13 +67,14 @@ def create_directory(path):
     # Create a directory
     if not os.path.exists(path): os.mkdir(path)
 
-def save_image(array, path, extension = ".png"):
+def save_image(array, path, resize = False, extension = ".png"):
     '''
     Saves an array into an image file
     
     Args:
         array - image as a <np.array>
         path - path for the image as <str>
+        resize - [optional] to resize image to given size - <tuple> of <int> (w,h)
         extension - [optional] type of image file as <str>
     
     Returns:
@@ -70,7 +88,11 @@ def save_image(array, path, extension = ".png"):
         path = path.split(".")[0] + extension
         
     # Save image into a file using PIL Image handle
-    Image.fromarray(array).save(path)
+    img = Image.fromarray(array)
+    # Resize image if reaquired
+    if resize: img = img.resize(resize)
+    # Save image
+    img.save(path)
     
 def read_image(image_path):
     '''
