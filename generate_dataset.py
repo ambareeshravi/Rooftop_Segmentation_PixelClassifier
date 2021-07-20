@@ -24,8 +24,10 @@ def generate_patches(data, label, patch_size = 512, patch_stride = 64, path = ".
         patch_size - size of the square patch to be generated as <int>
         patch_stride - stride for moving across the parent image as <int>
         path - directory to save the patches as <str>
+    
     Returns:
         -
+    
     Exception:
         number of patches as <int>
     '''
