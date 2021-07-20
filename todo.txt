@@ -1,0 +1,9 @@
+1. Multiple resolution to 512x512 in generate_dataset.py
+2. Status prints function
+3. Running on GPU/CPU indication
+4. ETA
+5. prediction code
+6. visualization
+7. different loss functions . atleast mse
+8. generate dataset as a class
+9. train-test-split outside

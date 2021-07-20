@@ -93,6 +93,9 @@ class PixelClassifier_Trainer:
         
         Exception:
             -
+            
+        Possible loss functions apart from BCE:
+            1) MSE 2) Focal Loss 3) SSIM 4) DICE loss
         '''
         return nn.BCELoss(reduction = self.loss_params["bce_reduction"])
     
