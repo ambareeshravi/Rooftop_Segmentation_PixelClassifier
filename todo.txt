@@ -1,3 +1,2 @@
-1. Complete documentation
 2. Write readme
 3. Include argparser main statements and for directly running scripts 

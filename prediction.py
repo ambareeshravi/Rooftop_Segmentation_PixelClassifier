@@ -1,5 +1,16 @@
+'''
+Author: Ambareesh Ravi
+Date: July 20, 2021
+Title: prediction.py
+Project: For InvisionAI recuritment
+Description:
+    Module to run evaluation and prediction on the trained PixelClassification CNN model
+'''
+
+# Module imports
 from train import *
 
+# Class for prediction/inference, evaluation, visualization of results
 class PixelClassifier_Tester(Rooftop_Dataset):
     def __init__(
         self,
@@ -13,6 +24,23 @@ class PixelClassifier_Tester(Rooftop_Dataset):
         useGPU = True,
         show_status = True
     ):
+        '''
+        Tester module for PixelClassifier CNN model
+        
+        Args:
+            model - [Optional] The trained <torch.nn.Module> model
+            model_path - path of the trained model as <str>
+            loss_params - <dict> containing params for the loss function
+            max_pool - <bool> applies max pool layer at the end
+            useGPU - <bool> to utilize GPU capabilities
+            show_status - <bool> display status
+            
+        Returns:
+            -
+            
+        Exception:
+            -
+        '''
         Rooftop_Dataset.__init__(self, isTrain = False)
         self.model = model
         self.model_path = model_path
@@ -33,29 +61,93 @@ class PixelClassifier_Tester(Rooftop_Dataset):
         if self.max_pool: self.maxPool = nn.MaxPool2d((max_pool,max_pool), stride = 1, padding = max_pool//2)
         
     def load_model(self):
+        '''
+        Loads model into memory
+        
+        Args:
+            -
+            
+        Returns:
+            -
+            
+        Exception:
+            -
+        '''
         self.model = torch.load(self.model_path)
         self.model.eval()
         
     def predict(self, inputs):
+        '''
+        Runs prediction for given inputs
+        
+        Args:
+            inputs - <torch.Tensor>
+            
+        Returns:
+            outputs as <torch.Tensor>
+            
+        Exception:
+            -
+        '''
         with torch.no_grad():
             outputs = self.model(inputs.to(self.device))
             if self.max_pool: outputs = self.maxPool(outputs)
         return outputs.cpu()
     
     def evaluate(self, test_loader):
+        '''
+        Evaluates the test dataset
+        
+        Args:
+            test_loader - data loader for the test set as <torch.utils.data.Dataloader>
+            
+        Returns:
+            average loss as <float>
+            
+        Exception:
+            -
+        '''
         losses = list()
         for batch_idx, (test_data, test_labels) in tqdm(enumerate(test_loader)):
             predicted_masks = self.predict(test_data.to(self.device))
             loss = self.loss_criterion(predicted_masks, test_labels)
             losses.append(loss.item())
-        return np.mean(losses)
+        
+        average_loss = np.mean(losses)
+        INFO("TEST %s LOSS is %0.4f"%(self.loss_params["loss_type"].capitalize(), average_loss))
+        return average_loss
     
     def process_image(self, image):
+        '''
+        Preprocess the image for prediction
+        
+        Args:
+            image - input as <str>/ <np.array> 
+            
+        Returns:
+            transformed image as <torch.Tensor>
+            
+        Exception:
+            -
+        '''
         if isinstance(image, str): image = read_image(image)
         elif isinstance(image, np.array): image = Image.fromarray(image)
         return self.transform_image(image).unsqueeze(dim = 0)
     
     def predict_image(self, image, return_type = "PIL.Image"):
+        '''
+        Predicts the image for prediction
+        
+        Args:
+            image - input as <str>/ <np.array> 
+            return_type - "np.array"/ "torch.Tensor"/ "PIL.Image"
+            
+        Returns:
+            output
+            
+        Exception:
+            -
+        '''
         # input - str, image, np.array, torch.Tensor
         output = self.predict(self.process_image(image))
         output = output.cpu().detach()
@@ -69,6 +161,20 @@ class PixelClassifier_Tester(Rooftop_Dataset):
             return output
         
     def inference_large(self, image_path, patch_size = (500, 500), path = "output"):
+        '''
+        Runs inference on the large image
+        
+        Args:
+            image_path - path to the large input image as <str>
+            patch_size - <tuple> containting the patch resolution for inferencing
+            path - path to save the output as <str>
+            
+        Returns:
+            <PIL.Image>
+            
+        Exception:
+            -
+        '''
         img = read_image(image_path).convert("RGB")
         img_array = np.array(img)
         
@@ -91,8 +197,11 @@ class PixelClassifier_Tester(Rooftop_Dataset):
             save_image(output_mask, path)
         except:
             pass
+        
         return Image.fromarray(output_mask)
         
 if __name__=='__main__':
+    # Load the test dataset
     test_dataset = Rooftop_Dataset(isTrain = False)
+    # Get the test_loader
     test_loader = get_data_loader(test_dataset)

@@ -112,12 +112,52 @@ def read_image(image_path):
 
 class Visualizer:
     def __init__(self,):
+        '''
+        Initializes the class to visualize results in comparison with the inputs
+        
+        Args:
+            -
+            
+        Returns:
+            -
+            
+        Exception:
+            -
+        '''
         pass
     
     def gray2color(self, x):
+        '''
+        Converts a single channel grayscale image to coloured 3 channel format
+        
+        Args:
+            x - input as <np.array>
+            
+        Returns:
+            -
+            
+        Exception:
+            -
+        '''
         return np.repeat(np.expand_dims(x, axis = -1), 3, axis = -1)
         
     def visualize_composite(self, input_image, label, prediction, margin = 8, save_path = None):
+        '''
+        Function to visualize input, label, prediction together in an image
+        
+        Args:
+            input_image - input RGB image as <np.array>
+            label - label binary mask Grayscale image as <np.array>
+            prediction - predicted binary mask Grayscale image as <np.array>
+            margin - margin between images in terms of pixels in <int>
+            save_path - path to save the file <str>
+            
+        Returns:
+            -
+            
+        Exception:
+            -
+        '''
         rounded_pred = np.round(prediction)
         margin = np.ones((label.shape[0], margin, 3))
         composite = np.hstack((input_image, margin, self.gray2color(label), margin, self.gray2color(rounded_pred)))

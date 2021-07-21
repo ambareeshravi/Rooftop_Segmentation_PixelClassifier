@@ -12,10 +12,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+# PyTorch model for Pixelwise rooftop classifcation
 class PixelClassifier_CNN(nn.Module):
     def __init__(self, in_channels = 3):
         '''
-        Overrides nn.Modules to create a PyTorch model for classifying pixels with roofs in buildings
+        Overrides nn.Module to create a PyTorch model for classifying pixels with roofs in buildings
         
         Args:
             in_channels - number of input channels as <int> [3 for RGB, 1 for Grayscale]
