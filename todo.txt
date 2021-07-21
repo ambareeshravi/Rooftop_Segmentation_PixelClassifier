@@ -1,2 +1,1 @@
-1. Write readme
-2. Include argparser main statements and for directly running scripts
+1. Include argparser main statements and for directly running scripts

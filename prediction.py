@@ -205,3 +205,10 @@ if __name__=='__main__':
     test_dataset = Rooftop_Dataset(isTrain = False)
     # Get the test_loader
     test_loader = get_data_loader(test_dataset)
+    
+    # Create instance of the tester
+    tester = PixelClassifier_Tester()
+    # Evaluate the model
+    loss = tester.evaluate(test_loader)
+    # Run the model on the source input image and save the output
+    out = tester.inference_large("source_data/image.tif")
