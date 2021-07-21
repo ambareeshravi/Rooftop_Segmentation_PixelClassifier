@@ -108,11 +108,12 @@ def split_data(data_path = "rooftop/", test_size = 0.1):
     check = [os.listdir(os.path.join(data_path, tp, "data")) == os.listdir(os.path.join(data_path, tp, "label")) for tp in ["train", "test"]]
     assert all(check), "Files mismatch"
     
-def create_dataset(data_path = "rooftop/", patch_info= [(512, 0.25)], rotations = [0, 90, 180], test_size = 0.15):
+def create_dataset(soure_data = "source_data/", data_path = "rooftop/", patch_info= [(512, 0.25)], rotations = [0, 90, 180], test_size = 0.15):
     '''
     Creates a dataset from the given two images [data.tif/ label.tif]
     
     Args:
+        soure_data - path with the original images of rooftop aerial view and corresponding label as <str>
         data_path - path to the dataset as <str>
         patch_info - contains the configurations for patch generation as a <list> of (patch size <int>, stride fraction as <float>)
         rotations - <list> of image rotations in degrees as <int>
@@ -126,8 +127,8 @@ def create_dataset(data_path = "rooftop/", patch_info= [(512, 0.25)], rotations 
         
     '''
     # Read the original images
-    d_img = Image.open("image.tif").convert("RGB")
-    l_img = Image.open("labels.tif")
+    d_img = Image.open(os.path.join(soure_data, "image.tif")).convert("RGB")
+    l_img = Image.open(os.path.join(soure_data, "labels.tif"))
     
     # Apply different rotations
     for rotation in rotations:
