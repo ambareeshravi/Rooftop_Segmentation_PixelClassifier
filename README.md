@@ -11,25 +11,25 @@ Python Exercise for InvisionAI interview process
     
     The above script creates dataset in the following structure
     
-    rooftop/
-    ├── test/
-    │   ├── data/
-    │   │   ├── 00004.png
-    │   │   ├── 00005.png
-    │   │   ├── ...
-    │   └── label
-    │       ├── 00004.png
-    │       ├── 00005.png
-    │       ├── ...
-    └── train/
-        ├── data/
-        │   ├── 00000.png
-        │   ├── 00001.png
-        │   ├── ...
-        └── label/
-            ├── 00000.png
-            ├── 00001.png
-            ├── ...
+    rooftop/\
+    ├── test/\
+    │   ├── data/\
+    │   │   ├── 00004.png\
+    │   │   ├── 00005.png\
+    │   │   ├── ...\
+    │   └── label\
+    │       ├── 00004.png\
+    │       ├── 00005.png\
+    │       ├── ...\
+    └── train/\
+        ├── data/\
+        │   ├── 00000.png\
+        │   ├── 00001.png\
+        │   ├── ...\
+        └── label/\
+            ├── 00000.png\
+            ├── 00001.png\
+            ├── ...\
             
 3. To train the PixelClassification CNN model to detect rooftops in aerial view images, run
    
@@ -37,12 +37,12 @@ Python Exercise for InvisionAI interview process
     
     The trained model will be saved in the following structure
     
-    models/
-    ├── model_v1.pth
-    ├── model_v2.pth
-    ├── model_v3.pth
-    ├── model_v4.pth
-    └── model_v5.pth
+    models/\
+    ├── model_v1.pth\
+    ├── model_v2.pth\
+    ├── model_v3.pth\
+    ├── model_v4.pth\
+    └── model_v5.pth\
     
 4. To test, evaluate the trained model, visualize and save the output, run
 
