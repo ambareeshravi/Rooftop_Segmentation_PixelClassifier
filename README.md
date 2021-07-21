@@ -17,7 +17,7 @@ Python Exercise for InvisionAI interview process
     │   │   ├── 00004.png\
     │   │   ├── 00005.png\
     │   │   ├── ...\
-    │   └── label\
+    │   └── label/\
     │       ├── 00004.png\
     │       ├── 00005.png\
     │       ├── ...\
@@ -29,7 +29,7 @@ Python Exercise for InvisionAI interview process
         └── label/\
             ├── 00000.png\
             ├── 00001.png\
-            ├── ...\
+            ├── ...
             
 3. To train the PixelClassification CNN model to detect rooftops in aerial view images, run
    
@@ -42,7 +42,7 @@ Python Exercise for InvisionAI interview process
     ├── model_v2.pth\
     ├── model_v3.pth\
     ├── model_v4.pth\
-    └── model_v5.pth\
+    └── model_v5.pth
     
 4. To test, evaluate the trained model, visualize and save the output, run
 
