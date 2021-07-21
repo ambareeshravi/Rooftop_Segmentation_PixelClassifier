@@ -5,16 +5,18 @@ Title: generate_dataset.py
 Project: For InvisionAI recuritment
 Description:
     Generates a dataset of image patches from the given image and label
+    Generates patches at multiple scales and different rotations
 '''
 
 # library imports
 from PIL import Image
 from tqdm import tqdm
+import shutil
 
 # module imports
 from utils import *
 
-def generate_patches(data, label, patch_size = 512, stride_fraction = 0.125, resize_to = (512, 512), path = "./dataset/"):
+def generate_patches(data, label, patch_size = 512, stride_fraction = 0.25, resize_to = (512, 512), parent_path = "./rooftop/"):
     '''
     Generates and save patches of images from a parent image pair of data and label at multiple scales and strides
     
@@ -24,7 +26,7 @@ def generate_patches(data, label, patch_size = 512, stride_fraction = 0.125, res
         patch_size - size of the square patch to be generated as <int>
         stride_fraction - stride for moving across the parent image as <float> i.e a fraction of patch_size
         resize_to - size to which the patches have to be resized as <tuple> of <int> (w,h)
-        path - directory to save the patches as <str>
+        parent_path - directory to save the patches as <str>
     
     Returns:
         -
@@ -38,11 +40,15 @@ def generate_patches(data, label, patch_size = 512, stride_fraction = 0.125, res
     patch_stride = int(stride_fraction * patch_size)
     
     # Setup paths
-    create_directory(path)
-    data_path = os.path.join(path, "data")
-    create_directory(data_path)
-    label_path = os.path.join(path, "label")
-    create_directory(label_path)
+    create_directory(parent_path)
+    
+    for type_ in ["train", "test"]:
+        create_directory(os.path.join(parent_path, type_))
+        for d in ["data", "label"]:
+            create_directory(os.path.join(parent_path, type_, d))
+            
+    data_path = os.path.join(parent_path, "train", "data")
+    label_path = os.path.join(parent_path, "train", "label")
     
     # Loop along the dimensions of the image
     patch_count = len(read_directory_content(data_path))
@@ -65,18 +71,36 @@ def generate_patches(data, label, patch_size = 512, stride_fraction = 0.125, res
     # return the patch count
     return patch_count-init_patch_count
 
+def split_data(data_path = "rooftop/", test_size = 0.1):
+    files_list = read_directory_content(os.path.join(data_path, "train", "data"))
+    INFO("Number of test files: %d"%(int(len(files_list)*test_size)))
+    test_files = np.random.choice(files_list, size = int(len(files_list)*test_size))
+    for tf in test_files:
+        if not (os.path.isfile(tf) or os.path.isfile(tf.replace("data", "label"))): continue
+        shutil.move(tf, tf.replace("train", "test"))
+        shutil.move(tf.replace("data", "label"), tf.replace("data", "label").replace("train", "test"))
+        
+    check = [os.listdir(os.path.join(data_path, tp, "data")) == os.listdir(os.path.join(data_path, tp, "label")) for tp in ["train", "test"]]
+    assert all(check), "Files mismatch"
+    
+def create_dataset(data_path = "rooftop/", patch_info= [(512, 0.25)], rotations = [0, 90, 180], test_size = 0.15):
+    d_img = Image.open("image.tif").convert("RGB")
+    l_img = Image.open("labels.tif")
+    
+    for rotation in rotations:
+        data = np.array(d_img.rotate(rotation))
+        label = np.array(l_img.rotate(rotation))
+
+        for (patch_size, stride_fraction) in patch_info:
+            n_patches = generate_patches(data, label, patch_size = patch_size, stride_fraction = stride_fraction, parent_path = data_path)
+            INFO("Generated %d patches of size %d, stride %d and rotation %d"%(n_patches, patch_size, int(stride_fraction*patch_size), rotation))
+            
+    split_data(data_path, test_size = test_size)
+        
 if __name__ == '__main__':
-    data = np.array(Image.open("image.tif").convert("RGB"))
-    label = np.array(Image.open("labels.tif"))
+    data_path = "rooftop/"
     
-    # Generate patches for size 512x512
-    n_patches = generate_patches(data, label)
-    INFO("Generated %d patches"%(n_patches))
+    patch_info = [(512,0.25), (1024,0.25), (256,0.5)]
+    rotations = [0, 90, 180]
     
-    # Generate patches for size 1024x1024
-    n_patches = generate_patches(data, label, patch_size = 1024, stride_fraction = 0.25)
-    INFO("Generated %d patches"%(n_patches))
-    
-    # Generate patches for size 256x256
-    n_patches = generate_patches(data, label, patch_size = 256, stride_fraction = 0.5)
-    INFO("Generated %d patches"%(n_patches))
+    create_dataset(data_path, patch_info, rotations)

@@ -49,7 +49,8 @@ def read_directory_content(path):
     Exception:
         -
     '''
-    return sorted(glob(os.path.join(path, "*")))
+    if "*" not in path: path = os.path.join(path, "*")
+    return sorted(glob(path))
     
 def create_directory(path):
     '''
@@ -109,8 +110,17 @@ def read_image(image_path):
     '''
     return Image.open(image_path)
 
-def _init_fn(worker_id):
-    '''
-    Sets the random seed for pytorch dataloader workers
-    '''
-    np.random.seed(int(MANUAL_SEED))
+class Visualizer:
+    def __init__(self,):
+        pass
+    
+    def gray2color(self, x):
+        return np.repeat(np.expand_dims(x, axis = -1), 3, axis = -1)
+        
+    def visualize_composite(self, input_image, label, prediction, margin = 8, save_path = None):
+        rounded_pred = np.round(prediction)
+        margin = np.ones((label.shape[0], margin, 3))
+        composite = np.hstack((input_image, margin, self.gray2color(label), margin, self.gray2color(rounded_pred)))
+        img = Image.fromarray((composite*255).astype(np.uint8))
+        if save_path: save_image()
+        return img

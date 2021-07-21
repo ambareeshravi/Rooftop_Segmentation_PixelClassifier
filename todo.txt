@@ -1,4 +1,3 @@
-5. prediction code
-6. visualization
-8. generate dataset as a class
-9. train-test-split outside
+1. Complete documentation
+2. Write readme
+3. Include argparser main statements and for directly running scripts 

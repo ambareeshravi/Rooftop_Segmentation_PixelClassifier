@@ -12,7 +12,31 @@ from torch import nn
 
 from utils import *
 from models import *
+from data import *
 
+def get_loss(loss_type, reduction):
+    '''
+    description
+
+    Args:
+        -
+
+    Returns:
+        -
+
+    Exception:
+        -
+
+    Possible loss functions apart from BCE:
+        1) MSE 2) SSIM? 3) Focal Loss? 4) DICE loss?
+    '''
+    loss_type = loss_type.lower()
+
+    if "bce" in loss_type:
+        return nn.BCELoss(reduction = reduction)
+    elif "mse" in loss_type:
+        return nn.MSELoss(reduction = reduction)
+        
 class PixelClassifier_Trainer:
     def __init__(
         self,
@@ -23,7 +47,7 @@ class PixelClassifier_Trainer:
         optimizer = "adam",
         loss_params = {
          "loss_type": "bce",
-         "reduction": "mean"
+         "reduction": "sum"
         },
         useGPU = True,
         showStatus = False
@@ -82,29 +106,6 @@ class PixelClassifier_Trainer:
             return torch.optim.SGD(self.model.parameters(), lr = lr, momentum=0.9)
         else: # default is Adam
             return torch.optim.Adam(self.model.parameters(), lr = lr)
-    
-    def get_loss(self,):
-        '''
-        description
-        
-        Args:
-            -
-            
-        Returns:
-            -
-        
-        Exception:
-            -
-            
-        Possible loss functions apart from BCE:
-            1) MSE 2) SSIM? 3) Focal Loss? 4) DICE loss?
-        '''
-        loss_type = self.loss_params["loss_type"].lower()
-        
-        if "bce" in loss_type:
-            return nn.BCELoss(reduction = self.loss_params["reduction"])
-        elif "mse" in loss_type:
-            return nn.MSELoss(reduction = self.loss_params["reduction"])
     
     def step(self, inputs, labels):
         '''
@@ -190,7 +191,7 @@ class PixelClassifier_Trainer:
         '''
         self.epochs = epochs
         
-        self.loss_criterion = self.get_loss()
+        self.loss_criterion = get_loss(self.loss_params["loss_type"], self.loss_params["reduction"])
         self.optimizer = self.get_optimizer(lr)
         
         if self.showStatus: INFO("Loss and Optimizer ready")
@@ -224,3 +225,19 @@ class PixelClassifier_Trainer:
         
         torch.save(self.model, self.model_path)
         return self.history
+    
+if __name__ == '__main__':
+    train_dataset = Rooftop_Dataset(isTrain = True)
+    train_loader, val_loader = get_data_loader(train_dataset)
+    
+    trainer = PixelClassifier_Trainer(
+        model_path='models/model_v6.pth',
+        train_loader=train_loader,
+        val_loader=val_loader,
+        optimizer='adam',
+        loss_params={'loss_type': 'bce', 'reduction': 'sum'},
+        useGPU=True,
+        showStatus=True,
+    )
+    
+    history = trainer.train(epochs = 100, status_frequency=1)
