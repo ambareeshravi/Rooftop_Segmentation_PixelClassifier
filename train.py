@@ -244,11 +244,21 @@ class PixelClassifier_Trainer:
         return self.history
     
 if __name__ == '__main__':
-    train_dataset = Rooftop_Dataset(isTrain = True)
-    train_loader, val_loader = get_data_loader(train_dataset)
+    # Parse input arguments from the user for traing the model
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_path", type=str, default = "models/model.pth", help="Path to store the trained model")
+    parser.add_argument("--batch_size", type=int, default = 32, help="Batch Size for training")
+    parser.add_argument("--epochs", type=int, default = 100, help="NUmber of epochs for training")
+    args = parser.parse_args()
     
+    # Get dataset
+    train_dataset = Rooftop_Dataset(isTrain = True)
+    # Get data loader
+    train_loader, val_loader = get_data_loader(train_dataset, batch_size = args.batch_size)
+    
+    # Create an instance of the trainer
     trainer = PixelClassifier_Trainer(
-        model_path='models/model_v6.pth',
+        model_path=args.model_path,
         train_loader=train_loader,
         val_loader=val_loader,
         optimizer='adam',
@@ -257,4 +267,5 @@ if __name__ == '__main__':
         showStatus=True,
     )
     
-    history = trainer.train(epochs = 100, status_frequency=1)
+    # Train the model
+    history = trainer.train(epochs = args.epochs, status_frequency=1)

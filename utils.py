@@ -15,6 +15,7 @@ from time import time
 from glob import glob
 from PIL import Image
 import matplotlib.pyplot as plt
+import argparse
 
 # Global variables
 MANUAL_SEED = 42

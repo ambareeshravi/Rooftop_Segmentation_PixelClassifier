@@ -146,9 +146,15 @@ def create_dataset(soure_data = "source_data/", data_path = "rooftop/", patch_in
     split_data(data_path, test_size = test_size)
         
 if __name__ == '__main__':
-    data_path = "rooftop/"
+    # Parse input arguments from the user for traing the model
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_path", type=str, default = "rooftop/", help="Path to the data")
+    parser.add_argument('--patch_size', nargs='*', default = [256, 512, 1024], help='Size of the patches to be generated', type=int)
+    parser.add_argument('--strides', nargs='*', default = [0.5,0.25,0.25], help='Strides for generating patches', type=int)
+    parser.add_argument('--rotations', nargs='*', default = [0, 90, 180], help='Rotations to be processed', type=int)
+    args = parser.parse_args()
     
-    patch_info = [(512,0.25), (1024,0.25), (256,0.5)]
-    rotations = [0, 90, 180]
-    
-    create_dataset(data_path = data_path, patch_info = patch_info, rotations = rotations)
+    # Parse the patch_info for generating the dataset
+    patch_info = list(zip(args.patch_size, args.strides))
+    # Create the dataset by calling the function
+    create_dataset(data_path = args.data_path, patch_info = patch_info, rotations = args.rotations)

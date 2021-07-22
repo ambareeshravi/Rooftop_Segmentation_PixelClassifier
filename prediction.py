@@ -160,14 +160,14 @@ class PixelClassifier_Tester(Rooftop_Dataset):
         else: # torch.Tensor
             return output
         
-    def inference_large(self, image_path, patch_size = (500, 500), path = "output"):
+    def inference_large(self, image_path, patch_size = (500, 500), output_path = "output"):
         '''
         Runs inference on the large image
         
         Args:
             image_path - path to the large input image as <str>
             patch_size - <tuple> containting the patch resolution for inferencing
-            path - path to save the output as <str>
+            output_path - path to save the output as <str>
             
         Returns:
             <PIL.Image>
@@ -194,21 +194,32 @@ class PixelClassifier_Tester(Rooftop_Dataset):
         
         output_mask = (np.round(torch.vstack(row_tensors).numpy()) * 255).astype(np.uint8)
         try:
-            save_image(output_mask, path)
+            save_image(output_mask, output_path)
         except:
             pass
         
         return Image.fromarray(output_mask)
         
 if __name__=='__main__':
+    # Parse input arguments from the user for traing the model
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_path", type=str, default = "models/model_v5.pth", help="Path of the model to be tested")
+    parser.add_argument("--batch_size", type=int, default = 32, help="Batch Size for training")
+    parser.add_argument("--evaluate", type=bool, default = False, help="Should the model be evaluated for loss")
+    parser.add_argument("--source_image", type=str, default = "source_data/image.tif", help="Source image to run the inference on")
+    parser.add_argument("--output_path", type=str, default = "output.png", help="Path to save the final output")
+    args = parser.parse_args()
+    
     # Load the test dataset
     test_dataset = Rooftop_Dataset(isTrain = False)
     # Get the test_loader
-    test_loader = get_data_loader(test_dataset, isTrain = False)
+    test_loader = get_data_loader(test_dataset, isTrain = False, batch_size = args.batch_size)
     
     # Create instance of the tester
-    tester = PixelClassifier_Tester()
-    # Evaluate the model
-    loss = tester.evaluate(test_loader)
+    tester = PixelClassifier_Tester(model_path = args.model_path)
+    
+    if args.evaluate:
+        # Evaluate the model
+        loss = tester.evaluate(test_loader)
     # Run the model on the source input image and save the output
-    out = tester.inference_large("source_data/image.tif")
+    out = tester.inference_large(image_path = args.source_image, output_path = args.output_path)
