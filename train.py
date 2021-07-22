@@ -182,6 +182,7 @@ class PixelClassifier_Trainer:
             -
         '''
         print("Epoch: [%d/%d] | Train Loss: %0.4f | Val Loss: %0.4f | Time Elapsed(s): %0.2f"%(epoch, self.epochs, train_loss, val_loss, epoch_time))
+        print("-"*40)
     
     def train(self, lr = 1e-4, epochs = 100, status_frequency = 5):
         '''

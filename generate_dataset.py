@@ -151,4 +151,4 @@ if __name__ == '__main__':
     patch_info = [(512,0.25), (1024,0.25), (256,0.5)]
     rotations = [0, 90, 180]
     
-    create_dataset(data_path, patch_info, rotations)
+    create_dataset(data_path = data_path, patch_info = patch_info, rotations = rotations)

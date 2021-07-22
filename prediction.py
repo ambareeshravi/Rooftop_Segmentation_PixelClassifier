@@ -204,7 +204,7 @@ if __name__=='__main__':
     # Load the test dataset
     test_dataset = Rooftop_Dataset(isTrain = False)
     # Get the test_loader
-    test_loader = get_data_loader(test_dataset)
+    test_loader = get_data_loader(test_dataset, isTrain = False)
     
     # Create instance of the tester
     tester = PixelClassifier_Tester()

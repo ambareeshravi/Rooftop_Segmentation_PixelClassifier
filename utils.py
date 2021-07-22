@@ -7,13 +7,14 @@ Description:
     Contains utility and helper functions for the project
 '''
 
-# imports
+# Libraries imports
 import numpy as np
 import os
 from tqdm import tqdm
 from time import time
 from glob import glob
 from PIL import Image
+import matplotlib.pyplot as plt
 
 # Global variables
 MANUAL_SEED = 42
