@@ -73,3 +73,5 @@ Notes:
     3. Binary accuracy could also be used as a metric but is ignore and only loss is used as the primary metric
     
     4. Several other data augmentation strategy could also be incorporated internally as pytorch transforms but have to be customized and implemented so that both the input and label have the same transformation/ augmentation applied. 
+    
+    5. During final prediction, pooling is used externally to mimic dilation so that the roof segmentations aren't spotty. It can be disabled or ignored or can be replaced by image processing techniques from OpenCV/Scikit-Image/Pillow
