@@ -65,7 +65,7 @@ Python Exercise for InvisionAI interview process - segmenting the roofs of build
 5. Files like data.py, utils.py , models.py support the execution of the project
 
 
-Notes:
+Notes:\
     1. Adam optimizer and Binary Cross-entropy are used for simplicity. Other loss functions like Binary Cross-entropy with DICE loss, IOU loss etc can also be used for better performance.\
     2. The prescribed architecture was used for modelling although the architecture could be made efficient by adding/modifying layers (BatchNorm, experimenting with different hyper-parameters etc.)\
     3. Binary accuracy could also be used as a metric but is ignore and only loss is used as the primary metric.\
