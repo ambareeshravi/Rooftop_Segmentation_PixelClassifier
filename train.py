@@ -2,7 +2,6 @@
 Author: Ambareesh Ravi
 Date: July 19, 2021
 Title: train.py
-Project: For InvisionAI recuritment
 Description:
     Contains the class to train the pytorch PixelClassifier model
 '''
