@@ -2,7 +2,6 @@
 Author: Ambareesh Ravi
 Date: July 18, 2021
 Title: generate_dataset.py
-Project: For InvisionAI recuritment
 Description:
     Generates a dataset of image patches from the given image and label
     Generates patches at multiple scales and different rotations
