@@ -2,7 +2,6 @@
 Author: Ambareesh Ravi
 Date: July 20, 2021
 Title: data.py
-Project: For InvisionAI recuritment
 Description:
     Contains data handling functionalities for training and evaluation of models
 '''
