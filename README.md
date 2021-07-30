@@ -1,5 +1,5 @@
-# InvisionAI_PixelClassifier
-Python Exercise for InvisionAI interview process - segmenting the roofs of buildings in aerial view images
+# Rooftop Semantic Sementation
+Segmenting the roofs of buildings in aerial view images for planning the installation of solar panels, rain water harvesting etc 
    
 1. Install all the dependencies from requirements.text in your python3 environment
     
