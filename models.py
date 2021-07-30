@@ -2,7 +2,6 @@
 Author: Ambareesh Ravi
 Date: July 19, 2021
 Title: models.py
-Project: For InvisionAI recuritment
 Description:
     Contains the PyTorch CNN model for rooftop pixel classification/segmentation
 '''
