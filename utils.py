@@ -2,7 +2,6 @@
 Author: Ambareesh Ravi
 Date: July 18, 2021
 Title: utils.py
-Project: For InvisionAI recuritment
 Description:
     Contains utility and helper functions for the project
 '''
