@@ -2,7 +2,6 @@
 Author: Ambareesh Ravi
 Date: July 20, 2021
 Title: prediction.py
-Project: For InvisionAI recuritment
 Description:
     Module to run evaluation and prediction on the trained PixelClassification CNN model
 '''
